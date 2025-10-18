@@ -7,3 +7,8 @@ server:
   servlet:
     context-path: /auth
 
+config:
+  swagger:
+    url: ${server.port}${server.servlet.context-path}
+    name: ${spring.application.name}
+    title: Kong OIDC Tutorial API Documentation
