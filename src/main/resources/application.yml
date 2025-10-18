@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: kong-tutorial
+
+server:
+  port: 8090
+  servlet:
+    context-path: /auth
+

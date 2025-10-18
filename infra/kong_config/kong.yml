@@ -1,0 +1,72 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+  - name: spring-app
+    url: http://host.docker.internal:8081
+    routes:
+      - name: app-route
+        paths:
+          - /api
+        strip_path: true
+        protocols:
+          - http
+          - https
+
+    plugins:
+      - name: oidc
+        config:
+          # --- Cấu hình cơ bản ---
+          discovery: "http://keycloak:8080/realms/kong-oidc/.well-known/openid-configuration"
+          client_id: "kong-oidc-client"
+          client_secret: "r5pffsjctPf7hNklTlfbcAoTf5pelg59"
+          ssl_verify: "no"                 # bỏ verify khi chạy local
+          scope: "openid profile email"    # yêu cầu claim mặc định
+
+          # --- Loại xác thực ---
+          bearer_only: "no"                # cho phép redirect login nếu chưa có token
+          response_type: "code"            # authorization code flow (chuẩn OIDC)
+          response_mode: "query"           # nhận code qua query param
+
+          # --- Redirect login/logout ---
+          redirect_uri_path: "/api/callback"     # đường dẫn callback trả về sau login
+          logout_path: "/logout"                 # endpoint logout trên Kong
+          redirect_after_logout_uri: "http://localhost:8000/api"  # sau khi logout
+
+          # --- Cookie & session ---
+          session_secret: "change_this_secret_string"  # random 32 ký tự
+          session_storage: "cookie"                   # lưu session client side
+          session_cookie_name: "oidc_session"          # tên cookie
+
+          # --- Mapping header chuyển cho upstream (Spring Boot) ---
+          userinfo_header_name: "X-Userinfo"           # chứa userinfo dạng base64 JSON
+          access_token_header_name: "X-Access-Token"   # token JWT
+          id_token_header_name: "X-ID-Token"           # ID Token JWT
+          token_header_name: "Authorization"           # giữ nguyên header bearer
+          upstream_headers_claims: ["email", "preferred_username", "sub"]
+
+          # --- Cấu hình lỗi ---
+          unauth_action: "auth"      # nếu không có token => redirect login
+          unauthorized_redirect_uri: "http://localhost:8000/api"
+
+          # --- Debug ---
+          log_traces: true
+          enable_hs_signatures: true
+
+          #White List API
+          filters: "^(?!/(swagger|v3|webjars|oauth2|favicon|api/v1/auth)).*"
+
+  - name: spring-public
+    url: http://host.docker.internal:8081
+    routes:
+      - name: public-route
+        paths:
+          - /swagger-ui
+          - /swagger-ui.html
+          - /v3/api-docs
+          - /v3/api-docs.yaml
+          - /webjars
+          - /favicon.ico
+          - /api/v1/auth
+        strip_path: false
+        protocols: ["http", "https"]

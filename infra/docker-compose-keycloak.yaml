@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0.1
+    container_name: keycloak
+    command:
+      - start-dev
+      - --hostname-strict=false
+      - --hostname-strict-https=false
+      - --https-certificate-file=/opt/keycloak/conf/server.crt.pem
+      - --https-certificate-key-file=/opt/keycloak/conf/server.key.pem
+      - --https-port=8443
+    environment:
+      KC_DB: postgres
+      # Kết nối đến database keycloak_db với user keycloak_user
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
+      KC_DB_USERNAME: keycloak_user
+      KC_DB_PASSWORD: keycloak_secure_password
+      KC_HOSTNAME: localhost
+      KC_HTTP_ENABLED: true
+      KC_HTTPS_ENABLED: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    volumes:
+      - ./keycloak_config/certs:/opt/keycloak/conf
+      - keycloak_data:/opt/keycloak/data
+    networks:
+      - shared_network
+
+volumes:
+  keycloak_data:
+
+networks:
+  shared_network:
+    name: shared_network
+    external: true
