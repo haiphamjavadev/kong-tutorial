@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: kong-tutorial
+
+server:
+  port: 8090
+  servlet:
+    context-path: /auth
+
+config:
+  swagger:
+    url: ${server.port}${server.servlet.context-path}
+    name: ${spring.application.name}
+    title: Kong OIDC Tutorial API Documentation
+
+# OpenTelemetry Configuration
+otel:
+  exporter:
+    otlp:
+      endpoint: http://localhost:4317
+  traces:
+    exporter: jaeger
+    sampler:
+      probability: 1.0
+
+  resource:
+    attributes:
+      service.name: ${spring.application.name}
+      service.version: 1.0.0
+      deployment.environment: development
+
+# Management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  tracing:
+    sampling:
+      probability: 1.0  # Spring Boot 3.x tracing config
+
+# Logging
+logging:
+  level:
+    root: INFO
+
+
+
+

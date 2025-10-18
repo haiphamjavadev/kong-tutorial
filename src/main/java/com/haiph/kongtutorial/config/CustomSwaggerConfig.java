@@ -31,9 +31,9 @@ public class CustomSwaggerConfig {
 
 
     @Value("${config.swagger.url:null}")
-    private String lstServersTest;
+    private String lstServers;
     @Value("${config.swagger.title:null}")
-    private String lstServersTestTitle;
+    private String lstServersTitle;
     @Value("${config.swagger.project-name:API}")
     private String projectName;
 
@@ -51,9 +51,9 @@ public class CustomSwaggerConfig {
 
     private List<Server> serversList() {
         List<Server> servers = new ArrayList<>();
-        if (lstServersTest != null) {
-            String[] urls = lstServersTest.split(",");
-            String[] titles = lstServersTestTitle.split(",");
+        if (lstServers != null) {
+            String[] urls = lstServers.split(",");
+            String[] titles = lstServersTitle.split(",");
             if (urls.length != titles.length) {
                 return servers;
             }
