@@ -1,15 +1,11 @@
 apisix:
   node_listen: 9080
   enable_ipv6: false
-  
+
   enable_control: true
   control:
     ip: "0.0.0.0"
     port: 9092
-
-  # Enable tất cả các plugin phổ biến
-  enable_admin: true
-  enable_admin_cors: true
 
 deployment:
   admin:
@@ -30,23 +26,15 @@ deployment:
     timeout: 30
 
 nginx_config:
-  error_log: "/dev/stderr"
+  error_log: "/usr/local/apisix/logs/error.log"
   error_log_level: "warn"
 
   http:
-    access_log: "/dev/stdout"
-    access_log_format: '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent"'
+    access_log: "/usr/local/apisix/logs/access.log"
+    access_log_format: "$remote_addr - $remote_user [$time_local] $http_host \"$request\" $status $body_bytes_sent $request_time \"$http_referer\" \"$http_user_agent\" $upstream_addr $upstream_status $upstream_response_time \"$upstream_scheme://$upstream_host$upstream_uri\""
 
-plugin_attr:
-  prometheus:
-    export_addr:
-      ip: "0.0.0.0"
-      port: 9091
-
-# Danh sách plugins được enable
 plugins:
   - real-ip
-  - ai
   - client-control
   - proxy-control
   - request-id
@@ -93,38 +81,32 @@ plugins:
   - kafka-proxy
   - grpc-transcode
   - grpc-web
-  - public-api
-  - prometheus
-  - datadog
-  - loki-logger
-  - elasticsearch-logger
-  - echo
-  - loggly
   - http-logger
-  - splunk-hec-logging
   - skywalking-logger
   - google-cloud-logging
-  - sls-logger
+  - splunk-hec-logging
+  - file-logger
+  - syslog
   - tcp-logger
   - kafka-logger
   - rocketmq-logger
-  - syslog
   - udp-logger
-  - file-logger
   - clickhouse-logger
   - tencent-cloud-cls
-  - inspect
-  - example-plugin
-  - aws-lambda
-  - azure-functions
+  - loggly
+  - elasticsearch-logger
+  - prometheus
+  - datadog
+  - loki-logger
+  - node-status
+  - opentelemetry
   - openwhisk
-  - openfunction
   - serverless-post-function
   - ext-plugin-post-req
-  - ext-plugin-post-resp
+  - azure-functions
 
-stream_plugins:
-  - ip-restriction
-  - limit-conn
-  - mqtt-proxy
-  - syslog
+plugin_attr:
+  prometheus:
+    export_addr:
+      ip: "0.0.0.0"
+      port: 9091
