@@ -1,0 +1,10 @@
+minio:
+  enabled: true
+  endpoint: http://localhost:9000
+  access-key: HIFFOHSZ2S4DTZXrSFaF
+  secret-key: N1s7ssXpOLhQYuqmXyAI2RwB5wC29nLVZ6ZRdOva
+  bucket:
+    temp: temp-bucket
+    permanent: permanent-bucket
+  temp-expiration-days: 7
+  pre-signed-url-expiration-minutes: 15

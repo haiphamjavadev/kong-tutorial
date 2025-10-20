@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  minio:
+    image: minio/minio:RELEASE.2023-12-13T23-28-55Z
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: admin         # đổi thành access key mạnh
+      MINIO_ROOT_PASSWORD: Haicut123@    # đổi thành secret key mạnh
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"   # API
+      - "9001:9001"   # Console
+    networks:
+      - shared_network
+    restart: always
+
+volumes:
+  minio_data:
+
+networks:
+  shared_network:
+    name: shared_network
+    external: true
