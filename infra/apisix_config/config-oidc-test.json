@@ -1,0 +1,32 @@
+{
+  "uri": "/auth/**",
+  "name": "kong-router",
+  "methods": [
+    "GET",
+    "POST",
+    "PUT",
+    "DELETE",
+    "PATCH",
+    "HEAD",
+    "OPTIONS",
+    "CONNECT",
+    "TRACE",
+    "PURGE"
+  ],
+  "plugins": {
+    "openid-connect": {
+      "_meta": {
+        "disable": false
+      },
+      "bearer_only": true,
+      "client_id": "kong-oidc-client",
+      "client_secret": "r5pffsjctPf7hNklTlfbcAoTf5pelg59",
+      "discovery": "http://keycloak:8080/realms/kong-oidc/.well-known/openid-configuration",
+      "set_userinfo_header": true,
+      "ssl_verify": false,
+      "verify_jwt": true
+    }
+  },
+  "upstream_id": "589590466421326532",
+  "status": 1
+}
