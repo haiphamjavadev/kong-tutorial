@@ -22,7 +22,6 @@ public class BaseWebClientService {
     public BaseWebClientService(WebClient.Builder builder, Tracer tracer) {
         this.tracer = tracer;
         this.webClient = builder
-//                .baseUrl("http://localhost:8080") // override khi gọi
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }

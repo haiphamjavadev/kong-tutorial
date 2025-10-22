@@ -1,5 +1,5 @@
 {
-  "uri": "/auth/**",
+  "uri": "/auth-service/**",
   "name": "kong-router",
   "methods": [
     "GET",
@@ -25,6 +25,15 @@
       "set_userinfo_header": true,
       "ssl_verify": false,
       "verify_jwt": true
+    },
+    "proxy-rewrite": {
+      "_meta": {
+        "disable": false
+      },
+      "regex_uri": [
+        "/auth-service/(.*)",
+        "/$1"
+      ]
     }
   },
   "upstream_id": "589590466421326532",
